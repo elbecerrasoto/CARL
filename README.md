@@ -1,2 +1,2 @@
 # CARL
-Control of Automata wirh Reinforcement Learning
+Control of Automata with Reinforcement Learning
