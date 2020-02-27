@@ -189,6 +189,7 @@ def get_train_obs_acts(batch):
         train_acts.extend(eps_acts)
     return train_obs, train_acts
 
+# Unequal batches destabilize training?!
 if __name__ == "__main__":
     # Initializations
     writer = SummaryWriter(comment='cross_helicopter')
@@ -234,3 +235,11 @@ if __name__ == "__main__":
         writer.add_scalar("loss", loss_v.item(), epoch)
         writer.add_scalar("reward_mean", batch_reward_mean, epoch)
         writer.add_scalar("reward_bound", cutoff, epoch)
+
+
+# Saving the results
+# import pickle
+
+# file = open('cross_entropy_net', 'wb')
+# pickle.dump(net, file)     
+# file.close()
