@@ -8,7 +8,7 @@ Created on Tue Feb 18 18:02:41 2020
 
 import helicopter
 import numpy as np
-import multiprocessing as mp
+#import multiprocessing as mp
 
 import torch
 import torch.nn as nn
@@ -37,11 +37,11 @@ env = helicopter.Helicopter(n_row = N_ROW, n_col = N_COL,
 N_ACTIONS = env.actions_cardinality
 FREEZE_FRAMES = env.freeze
 
-FOREST_ITERATIONS = 100
+FOREST_ITERATIONS = 60
 STEPS_PER_EPISODE = FREEZE_FRAMES * FOREST_ITERATIONS
-EPOCHS = 2000
-ITERATIONS = 4
-BATCH_SIZE = 100
+EPOCHS = 1600
+ITERATIONS = 2
+BATCH_SIZE = 80
 PERCENTILE = 70
 CPUS = 1
 
@@ -159,12 +159,9 @@ def play_episode(net, steps_in_episode):
 
 # Harvest batch
 def get_batch(net, steps_in_episode, batch_size, cpus):
-    pool = mp.Pool(cpus)
-    # Get batch in parallel
-    batch = pool.starmap(play_episode,
-                         [ (net, steps_in_episode) for episode_idx in range(batch_size) ]
-                         )
-    pool.close()
+    batch = []
+    for eps_idx in range(batch_size):
+        batch.append( play_episode(net, steps_in_episode) )
     return batch
 
 def filter_batch(batch, percentile):
@@ -225,7 +222,7 @@ if __name__ == "__main__":
         
         # Flush top episodes if more than n acummulated
         if len(top_episodes) == 128:
-           top_episodes, __ = filter_batch(top_episodes, percentile = 90)            
+           top_episodes, __ = filter_batch(top_episodes, percentile = 80)            
             
         print(f'\n------------ {epoch + 1} ------------')
         print('reward_mean: {} loss: {}, cutoff: {}, top_length: {}'.format(
