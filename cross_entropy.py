@@ -39,7 +39,7 @@ FREEZE_FRAMES = env.freeze
 
 FOREST_ITERATIONS = 60
 STEPS_PER_EPISODE = FREEZE_FRAMES * FOREST_ITERATIONS
-EPOCHS = 1600
+EPOCHS = 2000
 ITERATIONS = 2
 BATCH_SIZE = 80
 PERCENTILE = 70
@@ -221,7 +221,7 @@ if __name__ == "__main__":
         top_episodes += top_current_batch
         
         # Flush top episodes if more than n acummulated
-        if len(top_episodes) == 128:
+        if len(top_episodes) >= 128:
            top_episodes, __ = filter_batch(top_episodes, percentile = 80)            
             
         print(f'\n------------ {epoch + 1} ------------')
