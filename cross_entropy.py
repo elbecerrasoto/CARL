@@ -8,7 +8,7 @@ Created on Tue Feb 18 18:02:41 2020
 
 import helicopter
 import numpy as np
-#import multiprocessing as mp
+import heuristic
 
 import torch
 import torch.nn as nn
@@ -17,8 +17,8 @@ from tensorboardX import SummaryWriter
 
 # Global Definitions
 
-SEED = 584105
-torch.manual_seed(SEED)
+# SEED = 584105
+# torch.manual_seed(SEED)
 
 # Environment parameters
 N_ROW = 8
@@ -39,10 +39,10 @@ FREEZE_FRAMES = env.freeze
 
 FOREST_ITERATIONS = 60
 STEPS_PER_EPISODE = FREEZE_FRAMES * FOREST_ITERATIONS
-EPOCHS = 2000
+EPOCHS = 1200
 ITERATIONS = 2
-BATCH_SIZE = 80
-PERCENTILE = 70
+BATCH_SIZE = 120
+PERCENTILE = 90
 CPUS = 1
 
 # Take advantage of hardware if available
@@ -164,6 +164,11 @@ def get_batch(net, steps_in_episode, batch_size, cpus):
         batch.append( play_episode(net, steps_in_episode) )
     return batch
 
+heuristic()
+
+def get_batch_heuristic():
+    pass
+
 def filter_batch(batch, percentile):
     # Extract the total_reward field
     batch_rewards = [ episode['total_reward'] for episode in batch ]
@@ -236,10 +241,9 @@ if __name__ == "__main__":
         writer.add_scalar("reward_mean", batch_reward_mean, epoch)
         writer.add_scalar("reward_bound", cutoff, epoch)
 
-
 # Saving the results
-# import pickle
+import pickle
 
-# file = open('cross_entropy_net', 'wb')
-# pickle.dump(net, file)     
-# file.close()
+file = open('cross_entropy_net', 'wb')
+pickle.dump(net, file)     
+file.close()

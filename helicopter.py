@@ -30,7 +30,7 @@ class Helicopter(forest_fire.ForestFire):
     def __init__(self, pos_row = None, pos_col = None, freeze = None, water = 100,
                  n_row = 16, n_col = 16,
                  p_tree=0.100, p_fire=0.001, p_init_tree=0.75,
-                 boundary='reflective', tree = '|', empty = '.', fire = '*'):
+                 boundary='reflective', tree = 3, empty = 1, fire = 7):
         super().__init__(n_row,n_col,
              p_tree,p_fire,p_init_tree,
              boundary,tree,empty,fire)
@@ -142,7 +142,7 @@ class Helicopter(forest_fire.ForestFire):
         return hit
     def reset(self):
         # Another random grid
-        self.__init__(self.pos_row,self.pos_col,
+        self.__init__(None,None,
                       self.freeze,self.water,
                       self.n_row,self.n_col,
                       self.p_tree,self.p_fire,self.p_init_tree,
