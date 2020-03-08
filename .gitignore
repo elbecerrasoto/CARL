@@ -1,3 +1,8 @@
+# Personal ignores
+# Cross Entropy trained net
+cross_entropy_net_v0
+# Links
+Link_to_lapan_code/
 # Tensor Board X
 runs/
 
