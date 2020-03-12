@@ -146,8 +146,27 @@ class Agent:
             self._reset()
         return self.total_reward
 
+def calc_loss(batch, net, tgt_net, device="cpu"):
+    states, actions, rewards, dones, next_states = batch
+
+    states_v = torch.tensor(states).to(device)
+    next_states_v = torch.tensor(next_states).to(device)
+    actions_v = torch.tensor(actions).to(device)
+    rewards_v = torch.tensor(rewards).to(device)
+    done_mask = torch.ByteTensor(dones).to(device)
+
+    state_action_values = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+    next_state_values = tgt_net(next_states_v).max(1)[0]
+    next_state_values[done_mask] = 0.0
+    next_state_values = next_state_values.detach()
+
+    expected_state_action_values = next_state_values * GAMMA + rewards_v
+    return nn.MSELoss()(state_action_values, expected_state_action_values)
+
+
+# Testing agent
 obs = ENV.reset()
-net = Net(n_actions=9, n_row=9, n_col=9)
+tgt_net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
 
 grid, position = observations_to_tensors([obs])
 net(grid, position)
@@ -156,94 +175,99 @@ agent = Agent(env = ENV, exp_buffer = ReplayMemory(REPLAY_SIZE))
 
 agent.env.render()
 for step_idx in range(100):
-    agent.play_step(net)
+    agent.play_step(net, epsilon=0.10)
     agent.env.render()
-    
 
-if False:
+tgt_net = Net(n_actions=9, n_row=9, n_col=9)
+batch = agent.exp_buffer.sample(2)
 
-    def calc_loss(batch, net, tgt_net, device="cpu"):
-        states, actions, rewards, dones, next_states = batch
-    
-        states_v = torch.tensor(states).to(device)
-        next_states_v = torch.tensor(next_states).to(device)
-        actions_v = torch.tensor(actions).to(device)
-        rewards_v = torch.tensor(rewards).to(device)
-        done_mask = torch.ByteTensor(dones).to(device)
-    
-        state_action_values = net(states_v).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
-        next_state_values = tgt_net(next_states_v).max(1)[0]
-        next_state_values[done_mask] = 0.0
-        next_state_values = next_state_values.detach()
-    
-        expected_state_action_values = next_state_values * GAMMA + rewards_v
-        return nn.MSELoss()(state_action_values, expected_state_action_values)
-    
-    
-    
-    
-    if __name__ == '__main__':
-        # Sample with epsilon greedy
-        pass
-    
-    
-    
-    
-    
-    if __name__ == "__main__":
-    
-        net = dqn_model.DQN(env.observation_space.shape, env.action_space.n).to(device)
-        tgt_net = dqn_model.DQN(env.observation_space.shape, env.action_space.n).to(device)
-        writer = SummaryWriter(comment="-" + args.env)
-        print(net)
-    
-        buffer = ExperienceBuffer(REPLAY_SIZE)
-        agent = Agent(env, buffer)
-        epsilon = EPSILON_START
-    
-        optimizer = optim.Adam(net.parameters(), lr=LEARNING_RATE)
-        total_rewards = []
-        frame_idx = 0
-        ts_frame = 0
-        ts = time.time()
-        best_mean_reward = None
-    
-        while True:
-            frame_idx += 1
-            epsilon = max(EPSILON_FINAL, EPSILON_START - frame_idx / EPSILON_DECAY_LAST_FRAME)
-    
-            reward = agent.play_step(net, epsilon, device=device)
-            if reward is not None:
-                total_rewards.append(reward)
-                speed = (frame_idx - ts_frame) / (time.time() - ts)
-                ts_frame = frame_idx
-                ts = time.time()
-                mean_reward = np.mean(total_rewards[-100:])
-                print("%d: done %d games, mean reward %.3f, eps %.2f, speed %.2f f/s" % (
-                    frame_idx, len(total_rewards), mean_reward, epsilon,
-                    speed
-                ))
-                if best_mean_reward is None or best_mean_reward < mean_reward:
-                    torch.save(net.state_dict(), args.env + "-best.dat")
-                    if best_mean_reward is not None:
-                        print("Best mean reward updated %.3f -> %.3f, model saved" % (best_mean_reward, mean_reward))
-                    best_mean_reward = mean_reward
-                if mean_reward > args.reward:
-                    print("Solved in %d frames!" % frame_idx)
-                    break
-    
-            if len(buffer) < REPLAY_START_SIZE:
-                continue
-    
-            if frame_idx % SYNC_TARGET_FRAMES == 0:
-                tgt_net.load_state_dict(net.state_dict())
-    
-            optimizer.zero_grad()
-            batch = buffer.sample(BATCH_SIZE)
-            loss_t = calc_loss(batch, net, tgt_net, device=device)
-            loss_t.backward()
-            optimizer.step()
-        writer.close()
+states, actions, rewards, dones, next_states = batch
+
+grids, positions = observations_to_tensors(states)
+grids_next, positions_next = observations_to_tensors(next_states)
+
+actions_v = torch.tensor(actions)
+rewards_v = torch.tensor(rewards)
+done_mask = torch.ByteTensor(dones)
+
+
+# Quality of the taken actions
+# The gather is differentiable
+state_action_values = net(grids, positions).gather(1, actions_v.unsqueeze(-1)).squeeze(-1)
+
+next_state_values = tgt_net(next_states_v).max(1)[0]
+next_state_values[done_mask] = 0.0
+next_state_values = next_state_values.detach()
+
+expected_state_action_values = next_state_values * GAMMA + rewards_v
+return nn.MSELoss()(state_action_values, expected_state_action_values)
+
+
+
+
+
+if __name__ == '__main__':
+    # Sample with epsilon greedy
+    pass
+
+
+
+
+
+if __name__ == "__main__":
+
+    net = dqn_model.DQN(env.observation_space.shape, env.action_space.n).to(device)
+    tgt_net = dqn_model.DQN(env.observation_space.shape, env.action_space.n).to(device)
+    writer = SummaryWriter(comment="-" + args.env)
+    print(net)
+
+    buffer = ExperienceBuffer(REPLAY_SIZE)
+    agent = Agent(env, buffer)
+    epsilon = EPSILON_START
+
+    optimizer = optim.Adam(net.parameters(), lr=LEARNING_RATE)
+    total_rewards = []
+    frame_idx = 0
+    ts_frame = 0
+    ts = time.time()
+    best_mean_reward = None
+
+    while True:
+        frame_idx += 1
+        epsilon = max(EPSILON_FINAL, EPSILON_START - frame_idx / EPSILON_DECAY_LAST_FRAME)
+
+        reward = agent.play_step(net, epsilon, device=device)
+        if reward is not None:
+            total_rewards.append(reward)
+            speed = (frame_idx - ts_frame) / (time.time() - ts)
+            ts_frame = frame_idx
+            ts = time.time()
+            mean_reward = np.mean(total_rewards[-100:])
+            print("%d: done %d games, mean reward %.3f, eps %.2f, speed %.2f f/s" % (
+                frame_idx, len(total_rewards), mean_reward, epsilon,
+                speed
+            ))
+            if best_mean_reward is None or best_mean_reward < mean_reward:
+                torch.save(net.state_dict(), args.env + "-best.dat")
+                if best_mean_reward is not None:
+                    print("Best mean reward updated %.3f -> %.3f, model saved" % (best_mean_reward, mean_reward))
+                best_mean_reward = mean_reward
+            if mean_reward > args.reward:
+                print("Solved in %d frames!" % frame_idx)
+                break
+
+        if len(buffer) < REPLAY_START_SIZE:
+            continue
+
+        if frame_idx % SYNC_TARGET_FRAMES == 0:
+            tgt_net.load_state_dict(net.state_dict())
+
+        optimizer.zero_grad()
+        batch = buffer.sample(BATCH_SIZE)
+        loss_t = calc_loss(batch, net, tgt_net, device=device)
+        loss_t.backward()
+        optimizer.step()
+    writer.close()
 
     
 
