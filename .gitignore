@@ -1,4 +1,6 @@
 # Personal ignores
+# Prototype and Learning Code
+prototypes/
 # Cross Entropy trained net
 cross_entropy_net_v0
 # Links

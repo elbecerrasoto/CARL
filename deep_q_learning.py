@@ -24,16 +24,15 @@ REPLAY_START_SIZE = 1000
 BATCH_SIZE = 32
 
 GAMMA = 0.95
-# Test GAMMA decay
-# 1*(GAMMA**np.arange(0,300))
 
-LEARNING_RATE = 0.0001
+LEARNING_RATE = 0.001
 
 # Epsilon decreses linearly by epoch
 EPSILON_START = 1.00
 EPSILON_END = 0.00
 
-EPOCHS = 10
+EPOCHS = 100
+SYNC_TARGET = 100
 
 Experience = collections.namedtuple('Experience',
                                     field_names=('state', 'action', 'reward', 'done', 'new_state'))
@@ -120,9 +119,6 @@ def observations_to_tensors(observations):
     position = torch.FloatTensor(position)
     return grid, position
 
-# To Do
-# Check env class that implements e-greedy
-
 class Agent:
     """Implements interaction with the environment &
     Policy"""
@@ -158,23 +154,13 @@ class Agent:
             self._reset()
         return self.total_reward
 
-# Testing agent
-# obs = ENV.reset()
-net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-agent = Agent(env = ENV, exp_buffer = ReplayMemory(REPLAY_SIZE))
-
-# agent.env.render()
-for step_idx in range(100):
-    agent.play_step(net, epsilon=0.10)
-    # agent.env.render()
-
 def calc_loss(batch, net, tgt_net):
     states, actions, rewards, dones, next_states = batch
     
     grids, positions = observations_to_tensors(states)
     grids_next, positions_next = observations_to_tensors(next_states)
     
-    actions_v = torch.tensor(actions)
+    actions_v = torch.tensor(actions) - 1
     rewards_v = torch.tensor(rewards)
     done_mask = torch.BoolTensor(dones)
 
@@ -190,20 +176,8 @@ def calc_loss(batch, net, tgt_net):
     expected_state_action_values = rewards_v + GAMMA * next_state_values
     return nn.MSELoss()(state_action_values, expected_state_action_values)
 
-# Testing loss calculation
-net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-tgt_net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-calc_loss(agent.exp_buffer.sample(2), net, tgt_net)
-
-count = 0
-for param in net.parameters():
-    # print(param)
-    count += 1
-print(count)
-
-#if __name__ == 'main':
+# if __name__ == 'main':
 # Initializations
-# Non-Linear functions approximators
 net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
 tgt_net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
 
@@ -211,78 +185,35 @@ buffer = ReplayMemory(REPLAY_SIZE)
 agent = Agent(ENV, buffer)
 
 optimizer = optim.Adam(net.parameters(), lr = LEARNING_RATE)
-# Sample using e-greedy
 
 # epsilon decreseases linearly by epoch
 epsilon_schedule = np.linspace(EPSILON_START, EPSILON_END, EPOCHS)
+
+# Fill the replay memory
+for filling_step in range(REPLAY_START_SIZE):
+    agent.play_step(net, epsilon = 1.00)
+    print('.', end='')
+    print('Filled Replay Memory')
+    print('Starting to learn now', end='\n\n')
+
+# Start training
 for epoch, epsilon in enumerate(epsilon_schedule):
-    print(f'epoch: #{epoch} \t epsilon: {epsilon}')
-    agent.play_step(net, epsilon)
+    print(f'epoch: #{epoch}')
+    # Syncronize net and target net
+    if epoch % SYNC_TARGET == 0:
+        tgt_net.load_state_dict(net.state_dict())
+    
+    # Play a step
     agent.env.render()
-        
+    agent.play_step(net, epsilon)
+    
+    # Network Optimization
+    optimizer.zero_grad()
+    batch = buffer.sample(BATCH_SIZE)
+    loss_t = calc_loss(batch, net, tgt_net)
+    loss_t.backward()
+    optimizer.step()
 
-for epsilon in np.linspace(EPSILON_START, EPSILON_END, EPOCHS)
-
-np.linspace(EPSILON_START, EPSILON_END, EPOCHS)
-enumerate(np.linspace(0, 10, 37))
-
-if __name__ == "__main__":
-    net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-    tgt_net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-
-    buffer = ReplayMemory(REPLAY_SIZE)
-    agent = Agent(env, buffer)
-    epsilon = EPSILON_START
-
-    optimizer = optim.Adam(net.parameters(), lr=LEARNING_RATE)
-    total_rewards = []
-    frame_idx = 0
-    ts_frame = 0
-    ts = time.time()
-    best_mean_reward = None
-
-    while True:
-        frame_idx += 1
-        epsilon = max(EPSILON_FINAL, EPSILON_START - frame_idx / EPSILON_DECAY_LAST_FRAME)
-        
-        # Play an episode
-        # Using epsilon-greedy
-        reward = agent.play_step(net, epsilon, device=device)
-        # At the end the of the episode
-        if reward is not None:
-            total_rewards.append(reward)
-            # Get the mean of the last 100
-            mean_reward = np.mean(total_rewards[-100:])
-            # Save if moving the mean forward
-            # Saving the best network so far
-            if best_mean_reward is None or best_mean_reward < mean_reward:
-                # Saving the best network so far
-                torch.save(net.state_dict(), args.env + "-best.dat")
-                if best_mean_reward is not None:
-                    print("Best mean reward updated %.3f -> %.3f, model saved" % (best_mean_reward, mean_reward))
-                best_mean_reward = mean_reward
-            # Solved if reward threshold is met
-            if mean_reward > args.reward:
-                print("Solved in %d frames!" % frame_idx)
-                break
-        
-        # Don't train yet, if the start size hasnt been met
-        if len(buffer) < REPLAY_START_SIZE:
-            continue 
-        # Syncronize net and target net
-        if frame_idx % SYNC_TARGET_FRAMES == 0:
-            tgt_net.load_state_dict(net.state_dict())
-        # Zeros the grads to proper backpropagation
-        optimizer.zero_grad()
-        # Get the batch from replay memory
-        batch = buffer.sample(BATCH_SIZE)
-        # Get the loss
-        loss_t = calc_loss(batch, net, tgt_net, device=device)
-        # Apply backprop
-        loss_t.backward()
-        # Actualize weights
-        optimizer.step()
-    writer.close()
 
     
 
