@@ -7,11 +7,16 @@ Created on Sun Mar  8 12:36:42 2020
 """
 
 import numpy as np
+np.set_printoptions(precision=4)
 import collections
+import pickle
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
+
+from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter('runs/DQN_helicopter')
 
 import helicopter
 
@@ -20,18 +25,18 @@ ENV = helicopter.Helicopter(n_row = N_ROW, n_col = N_COL,
                             p_fire = P_FIRE, p_tree = P_TREE)
 REPLAY_SIZE = 10000
 # Start learning at this size of the replay memory
-REPLAY_START_SIZE = 1000
+REPLAY_START_SIZE = 100
 BATCH_SIZE = 32
 
 GAMMA = 0.95
 
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.0001
 
 # Epsilon decreses linearly by epoch
 EPSILON_START = 1.00
 EPSILON_END = 0.00
 
-EPOCHS = 100
+EPOCHS = 200
 SYNC_TARGET = 100
 
 Experience = collections.namedtuple('Experience',
@@ -152,7 +157,7 @@ class Agent:
         if is_done:
             print('Episode is done')
             self._reset()
-        return self.total_reward
+        return reward
 
 def calc_loss(batch, net, tgt_net):
     states, actions, rewards, dones, next_states = batch
@@ -176,44 +181,65 @@ def calc_loss(batch, net, tgt_net):
     expected_state_action_values = rewards_v + GAMMA * next_state_values
     return nn.MSELoss()(state_action_values, expected_state_action_values)
 
-# if __name__ == 'main':
-# Initializations
-net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-tgt_net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
-
-buffer = ReplayMemory(REPLAY_SIZE)
-agent = Agent(ENV, buffer)
-
-optimizer = optim.Adam(net.parameters(), lr = LEARNING_RATE)
-
-# epsilon decreseases linearly by epoch
-epsilon_schedule = np.linspace(EPSILON_START, EPSILON_END, EPOCHS)
-
-# Fill the replay memory
-for filling_step in range(REPLAY_START_SIZE):
-    agent.play_step(net, epsilon = 1.00)
-    print('.', end='')
-    print('Filled Replay Memory')
+if __name__ == '__main__':
+    # Initializations
+    net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
+    tgt_net = Net(n_actions=ENV.actions_cardinality, n_row=ENV.n_row, n_col=ENV.n_col)
+    
+    buffer = ReplayMemory(REPLAY_SIZE)
+    agent = Agent(ENV, buffer)
+    
+    optimizer = optim.Adam(net.parameters(), lr = LEARNING_RATE)
+    
+    # epsilon decreseases linearly by epoch
+    epsilon_schedule = np.linspace(EPSILON_START, EPSILON_END, EPOCHS)
+    
+    # Fill the replay memory
+    for filling_step in range(REPLAY_START_SIZE):
+        agent.play_step(net, epsilon = 1.00)
+        print('.', end='')    
+    print(f'\nFilled Replay Memory')
+    
+    rewards_x_steps = collections.deque()
+    sample_renders = collections.deque()
+    
     print('Starting to learn now', end='\n\n')
-
-# Start training
-for epoch, epsilon in enumerate(epsilon_schedule):
-    print(f'epoch: #{epoch}')
-    # Syncronize net and target net
-    if epoch % SYNC_TARGET == 0:
-        tgt_net.load_state_dict(net.state_dict())
-    
-    # Play a step
-    agent.env.render()
-    agent.play_step(net, epsilon)
-    
-    # Network Optimization
-    optimizer.zero_grad()
-    batch = buffer.sample(BATCH_SIZE)
-    loss_t = calc_loss(batch, net, tgt_net)
-    loss_t.backward()
-    optimizer.step()
-
-
-    
-
+    # Start training
+    for epoch, epsilon in enumerate(epsilon_schedule):
+        writer.add_scalar('epsilon', epsilon, epoch)
+        print(f'.{epoch}',end='')
+        # Syncronize net and target net
+        if epoch % SYNC_TARGET == 0 and epoch != 0:
+            sample_renders.append(agent.env.render())
+            print(f'\n\n')
+            tgt_net.load_state_dict(net.state_dict())
+            rewards_x_steps = np.array(rewards_x_steps, dtype='float32')
+            mean_reward = rewards_x_steps.mean()
+            total_reward = rewards_x_steps.sum()
+            writer.add_scalar(f'mean_reward_{SYNC_TARGET}_steps', mean_reward, epoch)
+            writer.add_scalar(f'return_{SYNC_TARGET}_steps', total_reward, epoch)
+            print(f'mean reward per {SYNC_TARGET} steps:', mean_reward)
+            print(f'total reward per {SYNC_TARGET} steps: {total_reward}')
+            rewards_x_steps = collections.deque()
+            torch.save(net.state_dict(), 'DQN_last.dat')
+            with open('renders.dat', 'wb') as file:
+                pickle.dump(sample_renders, file)
+        # Play a step
+        # agent.env.render()
+        reward = agent.play_step(net, epsilon)
+        rewards_x_steps.append(reward)
+        writer.add_scalar('rewards', reward, epoch)
+        
+        # Network Optimization
+        optimizer.zero_grad()
+        batch = buffer.sample(BATCH_SIZE)
+        loss_t = calc_loss(batch, net, tgt_net)
+        writer.add_scalar('loss', loss_t, epoch)
+        loss_t.backward()
+        optimizer.step()
+    states, __, __, __, __ = agent.exp_buffer.sample(BATCH_SIZE)
+    grids, positions = observations_to_tensors(states)
+    writer.add_graph(net, (grids, positions))
+    writer.close()
+    with open('net.dat', 'wb') as file:
+        pickle.dump(net, file)
