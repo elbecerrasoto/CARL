@@ -2,6 +2,7 @@
 # Prototype and Learning Code
 prototypes/
 # Data
+DATA/
 cross_entropy_net_v0
 DQN_last.dat
 net.dat 
