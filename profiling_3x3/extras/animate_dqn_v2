@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jun  2 14:46:11 2020
+
+@author: ebecerra
+"""
+
+# ------------- Libraries -------------
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+import numpy as np
+import seaborn as sns
+
+from lib import dqn_model
+from lib.helpers import ReplayMemoryNSteps, Agent
+import torch
+import pickle
+
+import argparse
+
+# ------------- Globals -------------
+# Inputs
+FRAMES = 200
+INTERVAL = 600
+
+WEIGHTS_FILE = 'dqn_model_weights.pytorch'
+ENV_FILE = 'dqn_env.pickle'
+
+# Outputs
+OUT_FILE = 'dqn_animation.mp4'
+
+parser = argparse.ArgumentParser(description="It produces an animation using the learned policy.",
+                                 epilog="(2020) Any bug report it to: elbecerrasoto@gmail.com")
+parser.add_argument("-f", "--frames", default=FRAMES, type=int,
+                    help=f"Frames to capture. Default {FRAMES}")
+parser.add_argument("-i", "--interval", default=INTERVAL, type=int,
+                    help=f"Interval between frames in miliseconds. Default {INTERVAL}")
+parser.add_argument("-o", "--out_file", default=OUT_FILE, type=str,
+                    help=f"Output file. Default {OUT_FILE}")
+parser.add_argument("-w", "--weights", default=WEIGHTS_FILE, type=str,
+                    help=f"Learned weights file. Default {WEIGHTS_FILE}")
+parser.add_argument("-e", "--env", default=ENV_FILE, type=str,
+                    help=f"Environment object file. Default {ENV_FILE}")
+parser.add_argument("-s", "--silent", action="store_false",
+                    help="Flag for running silently.")
+
+args =parser.parse_args()
+FRAMES = args.frames
+INTERVAL = args.interval
+WEIGHTS_FILE = args.weights
+ENV_FILE = args.env
+OUT_FILE = args.out_file
+PRINTING = args.silent
+
+# ------------- Playing -------------
+# LoadAgent directly
+
+if PRINTING:
+    print(f"\n\nRunning with the following parameters:\n\
+          Frames: {FRAMES}\n\
+          Interval (ms): {INTERVAL}\n\
+          Weights file: {WEIGHTS_FILE}\n\
+          Env file: {ENV_FILE}\n\
+          Output file: {OUT_FILE}\n\
+          Silently: {not PRINTING}")
+    print('Loading Agent-Environment inteface.')
+with open(ENV_FILE, 'rb') as env_data:
+    env = pickle.load(env_data)
+
+def set_global_shape(env):
+    grid, pos, moves = env.reset()
+    return grid.shape
+
+buffer = ReplayMemoryNSteps(42)
+agent = Agent(env, buffer)
+
+shape = set_global_shape(agent.env)
+n_actions = len(agent.env.movement_actions)
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+net = dqn_model.DQN(shape, n_actions)
+if PRINTING:
+    print('Loading Policy Network.')
+net.load_state_dict(torch.load(WEIGHTS_FILE, map_location=device))
+
+# ------------- MatPlot Animate -------------
+# Plot style
+sns.set_style('whitegrid')
+
+agent._reset()
+# Global ax and figure to be changed at each frame
+fig, ax = plt.subplots(figsize=(8, 8))
+def ax_setup():
+    """Automaton visualization"""
+    # Major ticks
+    ax.set_xticks(np.arange(0, agent.env.n_col, 1))
+    ax.set_yticks(np.arange(0, agent.env.n_row, 1))
+    # Labels for major ticks
+    ax.set_xticklabels(np.arange(0, agent.env.n_col, 1), **agent.env.axes_font)
+    ax.set_yticklabels(np.arange(0, agent.env.n_row, 1), **agent.env.axes_font)
+    # Minor ticks
+    ax.set_xticks(np.arange(-.5, agent.env.n_col, 1), minor=True)
+    ax.set_yticks(np.arange(-.5, agent.env.n_row, 1), minor=True)
+    # Gridlines based on minor ticks
+    ax.grid(which='minor', color='whitesmoke', linestyle='-', linewidth=2)
+    ax.grid(which='major', color='w', linestyle='-', linewidth=0)
+    ax.tick_params(axis=u'both', which=u'both',length=0)
+
+# Set up
+ax_setup()    
+    
+# Artists to be edited
+img = ax.imshow(agent.env.grid_to_rgba(), aspect='equal')
+marker_style = dict(color='0.7', marker='P',
+            markersize=16, markerfacecolor='0.2')
+cross, = ax.plot(agent.env.pos_col, agent.env.pos_row, **marker_style)
+title = ax.set_title(f'Time: 0\nForest Fire Environment\nMode: {agent.env.env_mode.title()}', **agent.env.title_font)
+
+def init():
+    return img, cross, title
+
+if PRINTING:
+    print('Starting to animate.')
+def animate(i):    
+    img.set_data(agent.env.grid_to_rgba())
+    cross.set_data(agent.env.pos_col, agent.env.pos_row)
+    if i == 0:
+        title.set_text(f'Time: {i}\nForest Fire Environment\nMode: {agent.env.env_mode.title()}')
+    else:
+        title.set_text(f'Time: {i}\nMoves: {agent.env.remaining_moves}\nReward: {int(agent.env.reward)}')
+    agent.play_step(net)
+    return img, cross, title
+
+anim = FuncAnimation(fig, animate,
+                     frames=FRAMES,
+                     init_func=init,
+                     interval=INTERVAL,
+                     blit=True)
+
+if PRINTING:
+    print('Saving Results.')
+extension = OUT_FILE.split('.')[-1]
+if extension == 'gif':
+    anim.save(OUT_FILE, writer='imagemagick')
+else:
+    anim.save(OUT_FILE)
+if PRINTING:
+    print('\n')

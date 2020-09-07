@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 26 10:02:08 2020
+
+@author: ebecerra
+"""
+
+# ------------- Globals and Data Loading -------------
+
+import numpy as np
+import pandas as pd
+
+from torch.utils.tensorboard import SummaryWriter
+
+import argparse
+
+# INPUT = 'dqn_training.csv'
+# Log to TensorBoard each x epochs
+LOG_EACH_X_EPOCHS = 10
+# Reward mean window
+WINDOW = 1000
+
+# Output
+TB_OUT_DIR = 'tensorboard/dqn_training/'
+
+# Printting point each X epochs
+POINTS_X_EPOCHS = int(1e4)
+
+parser = argparse.ArgumentParser()
+parser.add_argument("csv_file",
+                    help=f"Training logs in csv")
+parser.add_argument("--log_each_x", default=LOG_EACH_X_EPOCHS,
+                    help=f"Log to TensorBoard each x epochs. Default int {LOG_EACH_X_EPOCHS}")
+parser.add_argument("--window", default=WINDOW,
+                    help=f"Sliding reward mean window. Default int {WINDOW}")
+parser.add_argument("--outdir", default=TB_OUT_DIR,
+                    help=f"Output directory. Default '{TB_OUT_DIR}'")
+
+args = parser.parse_args()
+INPUT = args.csv_file
+LOG_EACH_X_EPOCHS = args.log_each_x
+WINDOW = args.window
+TB_OUT_DIR = args.outdir
+
+dqn_training_logs = pd.read_csv(INPUT)
+print(f'Training CSV head:')
+print(dqn_training_logs.head())
+
+# ------------- Calculating Mean Windows -------------
+
+print('Calculating Mean Windows')
+rewards = np.array((dqn_training_logs['reward']))
+n = len(rewards)
+means = []
+for idx in range(n) :
+    if idx + WINDOW <= n:
+        mean = np.mean(rewards[idx:idx+WINDOW+1])
+    else:
+        mean = rewards[idx]
+    means.append(mean)
+
+dqn_training_logs['mean' + f'{WINDOW}'] = means
+
+# ------------- Writing to TensorBoard -------------
+
+print('Wrinting to TensorBoard')
+writer = SummaryWriter(TB_OUT_DIR)
+for idx in range(n):
+    if idx % LOG_EACH_X_EPOCHS == 0:
+        epoch = dqn_training_logs['epoch'][idx]
+
+        reward = dqn_training_logs['reward'][idx]
+        loss = dqn_training_logs['loss'][idx]
+        epsilon = dqn_training_logs['epsilon'][idx]
+        mean = dqn_training_logs['mean' + f'{WINDOW}'][idx]
+
+        writer.add_scalar('reward_per_step', reward, epoch)
+        writer.add_scalar('loss_per_epoch', loss, epoch)
+        writer.add_scalar('epsilon_per_epoch', epsilon, epoch)
+        writer.add_scalar('mean_reward_per_step', mean, epoch)
+    if idx % POINTS_X_EPOCHS == 0:
+        print('.', end='')
+writer.close()
+print()

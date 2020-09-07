@@ -1,0 +1,1870 @@
+# FOREST FIRE DQN
+# 2020/May/27 03:26:16
+#
+# ------------- Running Params -------------
+# EPOCHS = 6000000
+# JOB_ITERS = 200000
+# DEVICE = cuda
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 3
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.02
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 1000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 128
+# LEARNING_RATE = 6e-05
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 0.01,
+#  'reward_fire': -0.01,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'channels3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (conv): Sequential(
+#     (0): Conv2d(3, 32, kernel_size=(6, 6), stride=(1, 1), padding=(3, 3))
+#     (1): ReLU()
+#     (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1))
+#     (3): ReLU()
+#     (4): Conv2d(64, 64, kernel_size=(2, 2), stride=(1, 1))
+#     (5): ReLU()
+#   )
+#   (fc): Sequential(
+#     (0): Linear(in_features=579, out_features=512, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=512, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,05,27,03,26,16
+199999,END,2020,05,27,04,39,34
+# FOREST FIRE DQN
+# 2020/May/27 05:05:09
+#
+# ------------- Running Params -------------
+# EPOCHS = 6000000
+# JOB_ITERS = 1000000
+# DEVICE = cuda
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 3
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.02
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 1000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 128
+# LEARNING_RATE = 6e-05
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 0.01,
+#  'reward_fire': -0.01,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'channels3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (conv): Sequential(
+#     (0): Conv2d(3, 32, kernel_size=(7, 7), stride=(1, 1), padding=(3, 3))
+#     (1): ReLU()
+#     (2): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1), padding=(2, 2))
+#     (3): ReLU()
+#     (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (5): ReLU()
+#   )
+#   (fc): Sequential(
+#     (0): Linear(in_features=1603, out_features=64, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=64, out_features=32, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=32, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,05,27,05,05,09
+999999,END,2020,05,27,12,53,12
+1000000,START,2020,05,27,13,07,17
+# FOREST FIRE DQN
+# 2020/May/26 07:26:02
+#
+# ------------- Running Params -------------
+# EPOCHS = 2000000
+# JOB_ITERS = 1000000
+# DEVICE = cuda
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 1000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 6
+# * Discount
+# GAMMA = 0.9999
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.05
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 600
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 64
+# LEARNING_RATE = 0.0001
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 0.01,
+#  'reward_fire': -0.01,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'channels3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (conv): Sequential(
+#     (0): Conv2d(3, 32, kernel_size=(6, 6), stride=(1, 1), padding=(3, 3))
+#     (1): ReLU()
+#     (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1))
+#     (3): ReLU()
+#     (4): Conv2d(64, 64, kernel_size=(2, 2), stride=(1, 1))
+#     (5): ReLU()
+#   )
+#   (fc): Sequential(
+#     (0): Linear(in_features=579, out_features=512, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=512, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,05,26,07,26,02
+999999,END,2020,05,26,14,17,29
+1000000,START,2020,05,26,14,47,45
+1000001,START,2020,05,26,17,56,21
+1100000,END,2020,05,26,18,35,41
+1100001,START,2020,05,26,19,00,09
+1300000,END,2020,05,26,19,55,10
+1300001,START,2020,05,26,20,00,18
+1500000,END,2020,05,26,20,55,57
+1500001,START,2020,05,26,21,35,39
+1700000,END,2020,05,26,22,33,06
+1700001,START,2020,05,27,03,11,13
+# FOREST FIRE DQN
+# 2020/May/28 05:37:15
+#
+# ------------- Running Params -------------
+# EPOCHS = 1000000
+# JOB_ITERS = 1000000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 3
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.02
+# * Synchronize target network each x steps
+# SYNC_TARGET = 2000
+# * Replay Memory Size
+# REPLAY_SIZE = 100000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 1000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 128
+# LEARNING_RATE = 7e-05
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 0,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'channels3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (conv): Sequential(
+#     (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (1): ReLU()
+#     (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (3): ReLU()
+#     (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (5): ReLU()
+#   )
+#   (fc): Sequential(
+#     (0): Linear(in_features=579, out_features=512, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=512, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,05,28,05,37,15
+999999,END,2020,05,28,13,26,33
+1000000,START,2020,05,28,19,18,18
+1599999,END,2020,05,28,22,12,37
+1600000,START,2020,05,28,23,09,16
+2399999,END,2020,05,29,03,12,35
+2400000,START,2020,05,29,03,18,56
+3399999,END,2020,05,29,08,11,22
+# FOREST FIRE DQN
+# 2020/May/30 05:20:52
+#
+# ------------- Running Params -------------
+# EPOCHS = 6000000
+# JOB_ITERS = 2000000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 6
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.02
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 600000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 64
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'channels3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (conv): Sequential(
+#     (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (1): ReLU()
+#     (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (3): ReLU()
+#     (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (5): ReLU()
+#   )
+#   (fc): Sequential(
+#     (0): Linear(in_features=1603, out_features=512, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=512, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,05,30,05,20,53
+1999999,END,2020,05,30,18,40,40
+2000000,START,2020,05,30,21,07,18
+2499999,END,2020,05,31,00,43,16
+2500000,START,2020,05,31,00,52,54
+2999999,END,2020,05,31,04,44,00
+3000000,START,2020,05,31,04,57,05
+# FOREST FIRE DQN
+# 2020/May/30 23:05:09
+#
+# ------------- Running Params -------------
+# EPOCHS = 6000000
+# JOB_ITERS = 2000000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 3
+# * Discount
+# GAMMA = 0.9
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.07
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 600000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 256
+# LEARNING_RATE = 0.0001
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'channels3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (conv): Sequential(
+#     (0): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (1): ReLU()
+#     (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+#     (3): ReLU()
+#   )
+#   (fc): Sequential(
+#     (0): Linear(in_features=1603, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,05,30,23,05,09
+250000,END,2020,05,31,03,05,09
+250001,START,2020,05,31,06,24,38
+1354964,END,2020,05,01,06,24,38
+1354965,START,2020,06,01,18,15,58
+1954964,END,2020,06,02,04,47,12
+1954965,START,2020,06,02,04,59,44
+3154964,END,2020,06,02,22,53,08
+3154965,START,2020,06,02,23,42,19
+3620000,END,2020,06,03,15,42,19
+3620001,START,2020,06,03,12,49,23
+4420000,END,2020,06,04,06,51,22
+4420001,START,2020,06,04,11,29,06
+4720000,END,2020,06,04,18,09,16
+# FOREST FIRE DQN
+# 2020/June/02 00:15:37
+#
+# ------------- Running Params -------------
+# EPOCHS = 2000000
+# JOB_ITERS = 200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.9
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.02
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 256
+# LEARNING_RATE = 9e-05
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=78, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,02,00,15,37
+199999,END,2020,06,02,03,14,03
+200000,START,2020,06,02,03,41,51
+549999,END,2020,06,02,09,06,04
+550000,START,2020,06,02,13,15,27
+897999,END,2020,06,02,19,15,27
+898000,START,2020,06,02,18,52,33
+1197999,END,2020,06,02,23,42,40
+1198000,START,2020,06,02,23,49,25
+1198001,START,2020,06,03,00,05,42
+1439999,END,2020,06,03,06,05,42
+1440000,START,2020,06,03,12,41,28
+1739999,END,2020,06,03,17,24,47
+1740000,START,2020,06,03,18,34,00
+2059999,END,2020,06,04,00,29,40
+2060000,START,2020,06,04,20,08,40
+3259999,END,2020,06,05,11,01,30
+3260000,START,2020,06,05,14,11,57
+4459999,END,2020,06,06,12,40,43
+4460000,START,2020,06,06,15,28,43
+4859999,END,2020,06,06,20,32,39
+# FOREST FIRE DQN
+# 2020/June/02 00:15:37
+#
+# ------------- Running Params -------------
+# EPOCHS = 2000000
+# JOB_ITERS = 200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.9
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.02
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 256
+# LEARNING_RATE = 9e-05
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=78, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,02,00,15,37
+199999,END,2020,06,02,03,14,03
+200000,START,2020,06,02,03,41,51
+549999,END,2020,06,02,09,06,04
+550000,START,2020,06,02,13,15,27
+897999,END,2020,06,02,19,15,27
+898000,START,2020,06,02,18,52,33
+1197999,END,2020,06,02,23,42,40
+1198000,START,2020,06,02,23,49,25
+1198001,START,2020,06,03,00,05,42
+1439999,END,2020,06,03,06,05,42
+1440000,START,2020,06,03,12,41,28
+1739999,END,2020,06,03,17,24,47
+1740000,START,2020,06,03,18,34,00
+2059999,END,2020,06,04,00,29,40
+# FOREST FIRE DQN
+# 2020/June/04 02:19:32
+#
+# ------------- Running Params -------------
+# EPOCHS = 2000000
+# JOB_ITERS = 300
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 4
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 256
+# LEARNING_RATE = 9e-05
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=78, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,04,02,19,32
+299,END,2020,06,04,02,19,45
+300,START,2020,06,04,02,42,21
+240299,END,2020,06,04,05,53,06
+240300,START,2020,06,04,05,55,47
+580000,END,2020,06,04,11,55,47
+580001,START,2020,06,04,15,14,11
+820000,END,2020,06,04,21,14,11
+820001,START,2020,06,04,21,27,24
+1060000,END,2020,06,05,01,51,16
+1060001,START,2020,06,05,05,14,32
+1380000,END,2020,06,05,10,52,16
+1380001,START,2020,06,05,14,07,37
+1580000,END,2020,06,05,20,07,37
+1580001,START,2020,06,05,23,46,15
+1900000,END,2020,06,06,05,33,08
+1900001,START,2020,06,06,15,26,23
+2220000,END,2020,06,06,20,47,15
+2220001,START,2020,06,06,21,12,06
+2540000,END,2020,06,07,02,46,03
+# FOREST FIRE DQN
+# 2020/June/07 03:06:29
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=128, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=128, out_features=256, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=256, out_features=128, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=128, out_features=32, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=32, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,07,03,06,29
+1199999,END,2020,06,07,06,31,04
+# FOREST FIRE DQN
+# 2020/June/07 03:28:42
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 600000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 1
+# * Discount
+# GAMMA = 0.9
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 256
+# LEARNING_RATE = 0.0001
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=128, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=128, out_features=64, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,07,03,28,42
+509999,END,2020,06,07,09,28,42
+510000,START,2020,06,07,17,22,41
+809999,END,2020,06,07,21,13,31
+810000,START,2020,06,07,22,53,23
+1209999,END,2020,06,08,04,22,05
+# FOREST FIRE DQN
+# 2020/June/07 18:28:05
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 120
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 4,
+#  'n_col': 4,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=51, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,07,18,28,05
+119,END,2020,06,07,18,28,07
+120,START,2020,06,07,19,55,40
+1200119,END,2020,06,07,23,45,36
+1200120,START,2020,06,08,00,47,02
+2400119,END,2020,06,08,04,33,37
+# FOREST FIRE DQN
+# 2020/June/08 13:41:30
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 16
+# LEARNING_RATE = 0.0001
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,08,13,41,30
+1199999,END,2020,06,08,16,59,23
+# FOREST FIRE DQN
+# 2020/June/08 18:52:11
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 3
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,08,18,52,11
+1199999,END,2020,06,08,22,40,08
+# FOREST FIRE DQN
+# 2020/June/08 13:50:12
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 300000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 1
+# * Discount
+# GAMMA = 0.9
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 16
+# LEARNING_RATE = 0.0001
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=128, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=128, out_features=64, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,08,13,50,12
+299999,END,2020,06,08,14,50,59
+300000,START,2020,06,08,15,27,36
+699999,END,2020,06,08,18,27,34
+700000,START,2020,06,08,18,54,04
+1099999,END,2020,06,08,20,49,03
+1100000,START,2020,06,08,23,30,51
+1699999,END,2020,06,09,02,06,37
+# FOREST FIRE DQN
+# 2020/June/08 23:34:34
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 1
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,08,23,34,34
+1199999,END,2020,06,09,03,11,54
+# FOREST FIRE DQN
+# 2020/June/09 04:50:34
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 6000000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 10
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,09,04,50,34
+5999999,END,2020,06,10,01,25,06
+# FOREST FIRE DQN
+# 2020/June/10 04:05:04
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 3000000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=78, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,10,04,05,04
+2999999,END,2020,06,10,14,20,38
+# FOREST FIRE DQN
+# 2020/June/10 19:56:09
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 1
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 16
+# LEARNING_RATE = 0.0001
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,10,19,56,09
+1199999,END,2020,06,10,22,58,30
+# FOREST FIRE DQN
+# 2020/June/10 23:24:17
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 2
+# * Discount
+# GAMMA = 0.99
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.1
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 200000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.0003
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 3,
+#  'n_col': 3,
+#  'p_tree': 0.333,
+#  'p_fire': 0.066,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 1,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 1,
+#  'reward_fire': -1,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=30, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,10,23,24,17
+1199999,END,2020,06,11,04,32,05
+# FOREST FIRE DQN
+# 2020/June/13 05:27:17
+#
+# ------------- Running Params -------------
+# EPOCHS = 1200000
+# JOB_ITERS = 1200000
+# DEVICE = cuda:0
+#
+# ------------- Logging Params ------------
+# LOG_WINDOW = 10000
+# STATE_FILE = dqn_state.txt
+# TRAINING_FILE = dqn_training.csv
+# WEIGHTS_FILE = dqn_model_weights.pytorch
+#
+# ------------- DQN Params ------------
+# * N-steps unrolling of the Bellman Equation
+# STEPS = 3
+# * Discount
+# GAMMA = 0.9
+# * Min possible epsilon on epsilon-greedy policy, exponetial decay
+# MIN_EPSILON = 0.07
+# * Synchronize target network each x steps
+# SYNC_TARGET = 10000
+# * Replay Memory Size
+# REPLAY_SIZE = 400000
+# * Start learning at this size of the replay memory
+# REPLAY_START_SIZE = 2000
+#
+# ------------- Network Params ------------
+# BATCH_SIZE = 32
+# LEARNING_RATE = 0.00025
+#
+# ------------- Environment Params ------------
+# {'env_mode': 'stochastic',
+#  'n_row': 5,
+#  'n_col': 5,
+#  'p_tree': 0.333,
+#  'p_fire': 0.033,
+#  'custom_grid': None,
+#  'init_pos_row': None,
+#  'init_pos_col': None,
+#  'moves_before_updating': 2,
+#  'termination_type': 'continuing',
+#  'steps_to_termination': None,
+#  'fire_threshold': None,
+#  'reward_type': 'cells',
+#  'reward_tree': 0.01,
+#  'reward_fire': -0.08,
+#  'reward_empty': 0.0,
+#  'reward_hit': 10.0,
+#  'tree': 0,
+#  'empty': 1,
+#  'fire': 2,
+#  'rock': 3,
+#  'lake': 4,
+#  'observation_mode': 'one_hot3',
+#  'sub_tree': None,
+#  'sub_empty': None,
+#  'sub_fire': 'empty',
+#  'sub_rock': None,
+#  'sub_lake': None,
+#  'ip_tree': None,
+#  'ip_empty': None,
+#  'ip_fire': None,
+#  'ip_rock': None,
+#  'ip_lake': None}
+#
+# ------------- Network Arch ------------
+# DQN(
+#   (fc): Sequential(
+#     (0): Linear(in_features=78, out_features=256, bias=True)
+#     (1): ReLU()
+#     (2): Linear(in_features=256, out_features=512, bias=True)
+#     (3): ReLU()
+#     (4): Linear(in_features=512, out_features=256, bias=True)
+#     (5): ReLU()
+#     (6): Linear(in_features=256, out_features=64, bias=True)
+#     (7): ReLU()
+#     (8): Linear(in_features=64, out_features=9, bias=True)
+#   )
+# )
+epoch,bound,year,month,day,hour,minute,second
+0,START,2020,06,13,05,27,17
+1199999,END,2020,06,13,10,39,45

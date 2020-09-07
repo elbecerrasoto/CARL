@@ -1,0 +1,9 @@
+a	06_06_3x3fc_a.pytorch
+b	06_06_3x3fc_b_Trainedp.pytorch
+c	06_08_3x3fc_a.pytorch
+d	06_08_3x3fc_b.pytorch
+e	06_08_3x3fc_b_Trainedp.pytorch
+f	06_08_3x3fc_c.pytorch
+g	06_08_3x3fc_d.pytorch
+h	06_09_3x3fc_a.pytorch
+i	06_09_3x3fc_b.pytorch
